@@ -1,0 +1,46 @@
+repositories:
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: minio-operator
+    url: https://operator.min.io
+  - name: gpu-operator
+    url: https://helm.ngc.nvidia.com/nvidia
+
+releases:
+  # Install NGINX Ingress Controller for managing external access
+  - name: nginx-ingress-controller
+    chart: ingress-nginx/ingress-nginx
+    version: 4.13.2
+    namespace: nginx
+    values:
+      - dependencies/nginx-ingress-controller.yaml
+
+  # Install cert-manager for managing TLS certificates
+  - name: cert-manager
+    chart: jetstack/cert-manager
+    version: 1.18.2
+    namespace: cert-manager
+    values:
+      - dependencies/cert-manager-values.yaml
+
+  # Install MinIO Operator first
+  - name: minio-operator
+    namespace: minio-operator
+    createNamespace: true
+    chart: minio-operator/operator
+    version: 7.1.1
+    wait: true
+    disableValidationOnInstall: true # disable valiadation of CRDs, which are not installed yet
+
+  # Install GPU Operator for AKS with GPU nodes
+  - name: gpu-operator
+    namespace: gpu-operator
+    createNamespace: true
+    chart: gpu-operator/gpu-operator
+    version: v25.3.4
+    values:
+      - dependencies/nvidia-gpu-operator-values.yaml
+    wait: true
+    disableValidationOnInstall: true # disable valiadation of CRDs, which are not installed yet

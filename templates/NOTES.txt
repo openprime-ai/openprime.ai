@@ -1,0 +1,120 @@
+{{/*
+OpenPrime AI has been successfully installed!
+
+Chart Name: {{ .Chart.Name }}
+Chart Version: {{ .Chart.Version }}
+Release Name: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+🚀 INSTALLATION COMPLETE
+
+Your OpenPrime AI platform is being deployed with the following components:
+{{- if .Values.open-webui.enabled }}
+✅ OpenWebUI - Web interface for LLM interactions
+{{- end }}
+{{- if .Values.ollama.enabled }}
+✅ Ollama - LLM inference engine{{ if .Values.ollama.ollama.gpu.enabled }} (GPU-enabled){{ end }}
+{{- end }}
+{{- if .Values.lightrag.enabled }}
+✅ LightRAG - Graph-based RAG system
+{{- end }}
+{{- if .Values.redis-ha.enabled }}
+✅ Redis HA - High-performance caching
+{{- end }}
+{{- if .Values.qdrant.enabled }}
+✅ Qdrant - Vector database
+{{- end }}
+{{- if .Values.neo4j.enabled }}
+✅ Neo4j - Graph database
+{{- end }}
+{{- if .Values.tenant.enabled }}
+✅ MinIO - Object storage
+{{- end }}
+
+📊 RESOURCE SUMMARY
+{{- $totalCpuRequests := 0.0 }}
+{{- $totalMemoryRequests := 0.0 }}
+{{- if .Values.open-webui.enabled }}
+  {{- $totalCpuRequests = add $totalCpuRequests 0.5 }}
+  {{- $totalMemoryRequests = add $totalMemoryRequests 512.0 }}
+{{- end }}
+{{- if .Values.ollama.enabled }}
+  {{- $totalCpuRequests = add $totalCpuRequests 2.0 }}
+  {{- $totalMemoryRequests = add $totalMemoryRequests 2048.0 }}
+{{- end }}
+Total Estimated CPU Requests: {{ $totalCpuRequests }} cores
+Total Estimated Memory Requests: {{ $totalMemoryRequests }}Mi
+
+🌐 ACCESS INFORMATION
+
+To access your OpenPrime AI platform:
+
+{{- if .Values.open-webui.enabled }}
+{{- if .Values.open-webui.ingress.enabled }}
+1. OpenWebUI (Web Interface):
+   {{ if .Values.open-webui.ingress.tls }}https://{{ else }}http://{{ end }}{{ .Values.open-webui.ingress.host | default "openwebui.local" }}
+{{- else }}
+1. OpenWebUI (Port Forward):
+   kubectl port-forward service/{{ include "openprime-ai.fullname" . }}-open-webui 8080:80 -n {{ .Release.Namespace }}
+   Then visit: http://localhost:8080
+{{- end }}
+{{- end }}
+
+{{- if .Values.ollama.enabled }}
+{{- if .Values.ollama.ingress.enabled }}
+2. Ollama API:
+   {{ if .Values.ollama.ingress.tls }}https://{{ else }}http://{{ end }}{{ .Values.ollama.ingress.hosts[0].host | default "ollama.local" }}
+{{- else }}
+2. Ollama API (Port Forward):
+   kubectl port-forward service/{{ include "openprime-ai.fullname" . }}-ollama 11434:11434 -n {{ .Release.Namespace }}
+   Then access: http://localhost:11434
+{{- end }}
+{{- end }}
+
+📋 USEFUL COMMANDS
+
+Check deployment status:
+  kubectl get pods -n {{ .Release.Namespace }}
+
+View logs:
+  kubectl logs -f deployment/{{ include "openprime-ai.fullname" . }}-open-webui -n {{ .Release.Namespace }}
+
+Scale components:
+  kubectl scale deployment {{ include "openprime-ai.fullname" . }}-open-webui --replicas=2 -n {{ .Release.Namespace }}
+
+⚠️  IMPORTANT NOTES
+
+{{- if not .Values.open-webui.ingress.enabled }}
+🔸 Ingress is disabled. Use port-forwarding or enable ingress for external access.
+{{- end }}
+
+{{- if .Values.ollama.enabled }}
+{{- if not .Values.ollama.ollama.gpu.enabled }}
+🔸 GPU support is disabled. For better performance, enable GPU if available.
+{{- end }}
+{{- end }}
+
+{{- if not .Values.tenant.enabled }}
+🔸 MinIO tenant is disabled. Some features may require object storage.
+{{- end }}
+
+🔧 TROUBLESHOOTING
+
+If pods are not starting:
+1. Check resource availability: kubectl top nodes
+2. Check events: kubectl get events -n {{ .Release.Namespace }}
+3. Describe failed pods: kubectl describe pod <pod-name> -n {{ .Release.Namespace }}
+
+For GPU issues (if enabled):
+1. Check GPU operator: kubectl get pods -n gpu-operator
+2. Verify node labels: kubectl get nodes -o wide
+
+📚 DOCUMENTATION
+
+- Helm Chart: https://github.com/devopsgroupsk/openprime-ai
+- OpenWebUI: https://docs.openwebui.com/
+- Ollama: https://ollama.ai/
+- Support: info@devopsgroup.sk
+
+Happy AI development! 🤖✨
+*/}}

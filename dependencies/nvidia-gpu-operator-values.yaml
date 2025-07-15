@@ -1,0 +1,131 @@
+platform:
+  openshift: false
+nfd:
+  enabled: false
+  nodefeaturerules: false
+psa:
+  enabled: false
+cdi:
+  enabled: false
+  default: false
+sandboxWorkloads:
+  enabled: false
+  defaultWorkload: "container"
+hostPaths:
+  rootFS: "/"
+  driverInstallDir: "/run/nvidia/driver"
+daemonsets:
+  labels: {}
+  annotations: {}
+  priorityClassName: system-node-critical
+  tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+  - key: "kubernetes.azure.com/scalesetpriority"
+    operator: "Equal"
+    value: "spot"
+    effect: "NoSchedule"
+  updateStrategy: "RollingUpdate"
+  rollingUpdate:
+    maxUnavailable: "1"
+operator:
+  repository: nvcr.io/nvidia
+  image: gpu-operator
+  runtimeClass: nvidia-container-runtime
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Equal"
+    value: ""
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: ""
+    effect: "NoSchedule"
+  - key: "kubernetes.azure.com/scalesetpriority"
+    operator: "Equal"
+    value: "spot"
+    effect: "NoSchedule"
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: "node-role.kubernetes.io/master"
+              operator: In
+              values: [""]
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: "node-role.kubernetes.io/control-plane"
+              operator: In
+              values: [""]
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: "kubernetes.azure.com/scalesetpriority"
+              operator: In
+              values: ["spot"]
+mig:
+  strategy: single
+driver:
+  enabled: false
+toolkit:
+  enabled: false
+devicePlugin:
+  enabled: true
+  config:
+    create: false
+dcgm:
+  enabled: false
+dcgmExporter:
+  enabled: true
+gfd:
+  enabled: true
+migManager:
+  enabled: true
+nodeStatusExporter:
+  enabled: false
+gds:
+  enabled: false
+gdrcopy:
+  enabled: false
+vgpuManager:
+  enabled: false
+vgpuDeviceManager:
+  enabled: true
+vfioManager:
+  enabled: true
+kataManager:
+  enabled: false
+sandboxDevicePlugin:
+  enabled: true
+  repository: nvcr.io/nvidia
+  image: kubevirt-gpu-device-plugin
+  version: v1.4.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  args: []
+  env: []
+  resources: {}
+ccManager:
+  enabled: false
+node-feature-discovery:
+  worker:
+    tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Equal"
+      value: ""
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Equal"
+      value: ""
+      effect: "NoSchedule"
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+    - key: "kubernetes.azure.com/scalesetpriority"
+      operator: "Equal"
+      value: "spot"
+      effect: "NoSchedule"

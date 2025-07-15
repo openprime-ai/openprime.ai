@@ -1,0 +1,27 @@
+controller:
+  progressDeadlineSeconds: 5
+  config:
+    {}
+
+  admissionWebhooks:
+    patch:
+      nodeSelector:
+        {}
+
+  ingressClassResource:
+    default: true
+  nodeSelector:
+        {}
+
+  replicaCount: 1
+  metrics:
+    enabled: true
+    port: 10254
+
+  service:
+    externalTrafficPolicy: "Local"
+tcp:
+  {}
+
+udp:
+  {}

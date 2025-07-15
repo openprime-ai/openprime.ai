@@ -1,0 +1,806 @@
+## @section Global Configuration
+## OpenPrime AI - Comprehensive AI Platform Helm Chart
+## This chart deploys a complete AI platform with OpenWebUI, Ollama, LightRAG, and supporting services
+##
+## For additional configuration options and detailed documentation, please refer to:
+## - OpenWebUI: https://github.com/open-webui/helm-charts
+## - Ollama: https://github.com/otwld/ollama-helm
+## - Qdrant: https://github.com/qdrant/qdrant-helm
+## - Neo4j: https://github.com/neo4j/helm-charts
+## - Redis HA: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha
+## - MinIO Tenant: https://github.com/minio/operator/tree/master/helm/tenant
+
+####################################################
+# OPENWEB-UI
+####################################################
+## @section OpenWebUI Configuration
+## OpenWebUI provides a web interface for interacting with various LLMs
+## For full configuration options, see: https://github.com/open-webui/helm-charts
+## @param open-webui OpenWebUI configuration object
+open-webui:
+  ## @param open-webui.enabled Enable OpenWebUI deployment
+  enabled: true
+  ## @param open-webui.ollamaUrlsFromExtraEnv Get Ollama URLs from extra environment variables
+  ollamaUrlsFromExtraEnv: true
+
+  ## @section OpenWebUI Image Configuration
+  image:
+    ## @param open-webui.image.repository OpenWebUI container image repository
+    repository: ghcr.io/open-webui/open-webui
+    ## @param open-webui.image.tag OpenWebUI container image tag (leave empty to use chart default)
+    tag: ""
+    ## @param open-webui.image.pullPolicy OpenWebUI container image pull policy
+    pullPolicy: IfNotPresent
+
+  ## @param open-webui.imagePullSecrets Array of image pull secrets for private registries
+  ## Example:
+  ## imagePullSecrets:
+  ##   - name: registry-credentials
+  imagePullSecrets: []
+    # - name: registry-credentials
+
+  ## @param open-webui.replicaCount Number of OpenWebUI replicas to deploy
+  replicaCount: 1
+
+  ## @section OpenWebUI Pipelines Configuration
+  ## Pipelines extend Open WebUI functionality with additional processing capabilities
+  pipelines:
+    ## @param open-webui.pipelines.enabled Enable Pipelines chart to extend Open WebUI functionality
+    enabled: true
+    ## @param open-webui.pipelines.extraEnvVars Additional environment variables for pipelines
+    extraEnvVars: []
+
+  ## @section OpenWebUI Resources Configuration
+  ## @param open-webui.resources Resource configuration for OpenWebUI containers
+  resources:
+    ## @param open-webui.resources.requests Resource requests for OpenWebUI
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    ## @param open-webui.resources.limits Resource limits for OpenWebUI
+    limits:
+      cpu: "2000m"
+      memory: "2Gi"
+
+  ## @section OpenWebUI Persistence Configuration
+  ## @param open-webui.persistence Persistence configuration for OpenWebUI data
+  persistence:
+    ## @param open-webui.persistence.enabled Enable persistent storage for OpenWebUI
+    enabled: true
+    ## @param open-webui.persistence.size Size of the persistent volume
+    size: "10Gi"
+    ## @param open-webui.persistence.storageClass Storage class for persistent volumes (empty for default)
+    storageClass: ""
+    ## @param open-webui.persistence.accessModes Access modes for the persistent volume
+    accessModes:
+      - ReadWriteOnce
+
+  ## @section OpenWebUI Service Configuration
+  ## @param open-webui.service Service configuration for OpenWebUI
+  service:
+    ## @param open-webui.service.type Kubernetes service type
+    type: ClusterIP
+    ## @param open-webui.service.port Service port
+    port: 80
+    ## @param open-webui.service.containerPort Container port
+    containerPort: 8080
+
+  ## @section OpenWebUI Ingress Configuration
+  ## @param open-webui.ingress Ingress configuration for external access
+  ingress:
+    ## @param open-webui.ingress.enabled Enable ingress for OpenWebUI
+    enabled: false
+    ## @param open-webui.ingress.class Ingress class name
+    class: nginx
+    ## @param open-webui.ingress.annotations Ingress annotations
+    ## Example annotations for nginx ingress:
+    annotations: {}
+      # nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+      # nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+      # nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+      # cert-manager.io/cluster-issuer: "letsencrypt"
+    ## @param open-webui.ingress.host Host for OpenWebUI ingress
+    host: "openwebui.local"
+    ## @param open-webui.ingress.tls Enable TLS for ingress
+    tls: false
+
+  ## @section OpenWebUI Ollama Integration
+  ## @param open-webui.ollama Disable built-in Ollama (we use separate deployment)
+  ollama:
+    ## @param open-webui.ollama.enabled Disable built-in Ollama since we deploy it separately
+    enabled: false
+
+  ## @param open-webui.ollamaUrls External Ollama URL configuration
+  ## List of Ollama service URLs for load balancing
+  ollamaUrls:
+    - "http://openprime-ai-ollama.openprime-ai.svc.cluster.local:11434"
+
+  ## @section OpenWebUI Environment Variables
+  ## @param open-webui.extraEnvVars Environment variables for OpenWebUI configuration
+  ## Complete list of environment variables for customizing OpenWebUI behavior
+  extraEnvVars:
+    ## @param open-webui.extraEnvVars[].name User and group IDs for file permissions
+    - name: UID
+      value: "1000"
+    - name: GID
+      value: "1000"
+    ## @param open-webui.extraEnvVars[].name Environment mode (dev/prod)
+    - name: ENV
+      value: "prod"
+    ## @param open-webui.extraEnvVars[].name Custom name for the WebUI
+    - name: WEBUI_NAME
+      value: "OpenPrime AI"
+    ## @param open-webui.extraEnvVars[].name Default locale (en-US, sk-SK, cz-CZ, etc.)
+    - name: DEFAULT_LOCALE
+      value: "en-US"
+    ## @param open-webui.extraEnvVars[].name Admin user configuration
+    - name: WEBUI_ADMIN_EMAIL
+      value: "admin@example.com"
+    - name: WEBUI_ADMIN_USER
+      value: "admin"
+    - name: WEBUI_ADMIN_PASS
+      value: "admin123"
+    ## @param open-webui.extraEnvVars[].name Ollama service URLs
+    - name: OLLAMA_BASE_URL
+      value: "http://openprime-ai-ollama.openprime-ai.svc.cluster.local:11434"
+    - name: OLLAMA_BASE_URLS
+      value: "http://openprime-ai-ollama.openprime-ai.svc.cluster.local:11434"
+    ## @param open-webui.extraEnvVars[].name WebUI secret key for session management
+    - name: WEBUI_SECRET_KEY
+      value: "supersecret"
+    ## @param open-webui.extraEnvVars[].name Vector database configuration
+    - name: VECTOR_DB
+      value: "qdrant"
+    - name: QDRANT_URI
+      value: "http://openprime-ai-qdrant.openprime-ai.svc.cluster.local:6333"
+    - name: QDRANT_GRPC_PORT
+      value: "6334"
+    ## @param open-webui.extraEnvVars[].name RAG (Retrieval Augmented Generation) configuration
+    - name: RAG_EMBEDDING_ENGINE
+      value: "ollama"
+    - name: RAG_EMBEDDING_MODEL
+      value: "nomic-embed-text"
+    ## @param open-webui.extraEnvVars[].name Enable direct connections to services
+    - name: ENABLE_DIRECT_CONNECTIONS
+      value: "true"
+
+  ## @section OpenWebUI Security Context
+  ## @param open-webui.podSecurityContext Pod security context for OpenWebUI
+  # podSecurityContext:
+  #   fsGroup: 1000
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   runAsNonRoot: true
+
+  ## @param open-webui.containerSecurityContext Container security context for OpenWebUI
+  # containerSecurityContext:
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   runAsNonRoot: true
+  #   readOnlyRootFilesystem: false
+  #   allowPrivilegeEscalation: false
+  #   capabilities:
+  #     drop:
+  #       - ALL
+
+  ## @section OpenWebUI Pod Scheduling
+  ## @param open-webui.nodeSelector Node selector for OpenWebUI pods
+  nodeSelector: {}
+
+  ## @param open-webui.tolerations Tolerations for OpenWebUI pods
+  tolerations: []
+
+  ## @param open-webui.affinity Affinity rules for OpenWebUI pods
+  affinity: {}
+
+####################################################
+# OLLAMA
+####################################################
+## @section Ollama Configuration
+## Ollama provides local LLM inference capabilities
+## For full configuration options, see: https://github.com/otwld/ollama-helm
+## @param ollama Ollama configuration object
+ollama:
+  ## @param ollama.enabled Enable Ollama deployment
+  enabled: true
+
+  ## @param ollama.runtimeClassName Runtime class name for GPU support (e.g., nvidia)
+  runtimeClassName: ""
+
+  ## @param ollama.nodeSelector Node selector for Ollama pods
+  ## Example for GPU nodes:
+  ## nodeSelector:
+  ##   accelerator: nvidia-tesla-k80
+  nodeSelector: {}
+
+  ## @param ollama.tolerations Tolerations for Ollama pods (useful for spot instances or GPU nodes)
+  ## Example for spot instances:
+  tolerations: []
+    # - key: "kubernetes.azure.com/scalesetpriority"
+    #   operator: "Equal"
+    #   value: "spot"
+    #   effect: "NoSchedule"
+
+  ## @section Ollama Image Configuration
+  image:
+    ## @param ollama.image.repository Ollama container image repository
+    repository: ollama/ollama
+    ## @param ollama.image.tag Ollama container image tag (leave empty to use chart default)
+    tag: ""
+    ## @param ollama.image.pullPolicy Ollama container image pull policy
+    pullPolicy: IfNotPresent
+
+  ## @param ollama.replicaCount Number of Ollama replicas to deploy
+  replicaCount: 1
+
+  ## @section Ollama Resources Configuration
+  ## @param ollama.resources Resource configuration for Ollama containers
+  resources:
+    ## @param ollama.resources.requests Resource requests for Ollama
+    requests:
+      cpu: "100m"
+      memory: "2Gi"
+    ## @param ollama.resources.limits Resource limits for Ollama
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+  ## @section Ollama Environment Variables
+  ## @param ollama.extraEnv Additional environment variables for Ollama optimization
+  extraEnv:
+    ## @param ollama.extraEnv[].name Enable flash attention for faster inference
+    - name: OLLAMA_FLASH_ATTENTION
+      value: "1"
+    ## @param ollama.extraEnv[].name KV cache quantization type for memory efficiency
+    - name: OLLAMA_KV_CACHE_TYPE
+      value: "q8_0"
+    ## @param ollama.extraEnv[].name Maximum number of models to keep loaded
+    - name: OLLAMA_MAX_LOADED_MODELS
+      value: "2"
+    ## @param ollama.extraEnv[].name Default context length for models
+    - name: OLLAMA_CONTEXT_LENGTH
+      value: "4096"
+
+  ## @section Ollama GPU and Models Configuration
+  ollama:
+    ## @section Ollama GPU Configuration
+    gpu:
+      ## @param ollama.ollama.gpu.enabled Enable GPU support for Ollama
+      enabled: false
+      ## @param ollama.ollama.gpu.type GPU type (nvidia, amd)
+      type: "nvidia"
+      ## @param ollama.ollama.gpu.number Number of GPUs to allocate
+      number: 1
+      ## @param ollama.ollama.gpu.nvidiaResource NVIDIA GPU resource name
+      nvidiaResource: nvidia.com/gpu
+
+    ## @section Ollama Model Management
+    ## @param ollama.ollama.models Model configuration for automatic pulling and running
+    models:
+      ## @param ollama.ollama.models.pull Models to pull at startup
+      pull:
+        - mistral:7b
+        - llama3.1:8b
+        - nomic-embed-text
+
+      ## @param ollama.ollama.models.create Custom model variants to create
+      ## Example for creating custom context models:
+      create: []
+        # - name: llama3.1-ctx16384
+        #   template: |
+        #     FROM llama3.1:8b
+        #     PARAMETER num_ctx 16384
+
+      ## @param ollama.ollama.models.run Models to keep in memory at startup
+      run:
+        - mistral:7b
+        - llama3.1:8b
+
+  ## @section Ollama Persistence Configuration
+  ## @param ollama.persistentVolume Persistence configuration for Ollama models
+  persistentVolume:
+    ## @param ollama.persistentVolume.enabled Enable persistent storage for Ollama models
+    enabled: true
+    ## @param ollama.persistentVolume.size Size of the persistent volume for models
+    size: "100Gi"
+    ## @param ollama.persistentVolume.storageClass Storage class for persistent volumes (empty for default)
+    storageClass: ""
+    ## @param ollama.persistentVolume.accessModes Access modes for the persistent volume
+    accessModes:
+      - ReadWriteOnce
+
+  ## @section Ollama Service Configuration
+  ## @param ollama.service Service configuration for Ollama API
+  service:
+    ## @param ollama.service.type Kubernetes service type
+    type: ClusterIP
+    ## @param ollama.service.port Service port for Ollama API
+    port: 11434
+    ## @param ollama.service.annotations Service annotations
+    annotations: {}
+
+  ## @section Ollama Ingress Configuration
+  ## @param ollama.ingress Ingress configuration for Ollama API access
+  ingress:
+    ## @param ollama.ingress.enabled Enable ingress for Ollama API
+    enabled: false
+    ## @param ollama.ingress.annotations Ingress annotations
+    ## Example annotations for nginx ingress with large file uploads:
+    annotations: {}
+      # nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+      # nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      # nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+      # cert-manager.io/cluster-issuer: "letsencrypt"
+    ## @param ollama.ingress.hosts Ingress hosts configuration
+    hosts:
+      - host: "ollama.local"
+        paths:
+          - path: "/"
+            pathType: Prefix
+    ## @param ollama.ingress.tls TLS configuration for ingress
+    tls: []
+
+  ## @section Ollama Security Context
+  ## @param ollama.podSecurityContext Pod security context for Ollama
+  # podSecurityContext:
+  #   fsGroup: 1000
+
+  ## @param ollama.securityContext Container security context for Ollama
+  # securityContext:
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   runAsNonRoot: true
+
+  ## @section Ollama Health Probes
+  ## @param ollama.livenessProbe Liveness probe configuration
+  livenessProbe:
+    ## @param ollama.livenessProbe.enabled Enable liveness probe
+    enabled: true
+    ## @param ollama.livenessProbe.initialDelaySeconds Initial delay for liveness probe
+    initialDelaySeconds: 60
+    ## @param ollama.livenessProbe.periodSeconds Period for liveness probe checks
+    periodSeconds: 30
+    ## @param ollama.livenessProbe.timeoutSeconds Timeout for liveness probe
+    timeoutSeconds: 10
+
+  ## @param ollama.readinessProbe Readiness probe configuration
+  readinessProbe:
+    ## @param ollama.readinessProbe.enabled Enable readiness probe
+    enabled: true
+    ## @param ollama.readinessProbe.initialDelaySeconds Initial delay for readiness probe
+    initialDelaySeconds: 30
+    ## @param ollama.readinessProbe.periodSeconds Period for readiness probe checks
+    periodSeconds: 10
+    ## @param ollama.readinessProbe.timeoutSeconds Timeout for readiness probe
+    timeoutSeconds: 5
+
+####################################################
+# LIGHTRAG
+####################################################
+## @section LightRAG Configuration
+## LightRAG provides Graph-based Retrieval Augmented Generation capabilities
+## For more information, see: https://github.com/HKUDS/LightRAG
+## @param lightrag LightRAG configuration object
+lightrag:
+  ## @param lightrag.enabled Enable LightRAG deployment
+  enabled: false
+  ## @param lightrag.fullnameOverride Full name override for LightRAG resources
+  fullnameOverride: "lightrag"
+
+  ## @param lightrag.replicaCount Number of LightRAG replicas
+  replicaCount: 1
+
+  ## @section LightRAG Image Configuration
+  image:
+    ## @param lightrag.image.repository LightRAG container image repository
+    repository: ghcr.io/hkuds/lightrag
+    ## @param lightrag.image.tag LightRAG container image tag
+    tag: latest
+
+  ## @section LightRAG Service Configuration
+  ## @param lightrag.service Service configuration for LightRAG API
+  service:
+    ## @param lightrag.service.type Kubernetes service type
+    type: ClusterIP
+    ## @param lightrag.service.port Service port for LightRAG API
+    port: 9621
+
+  ## @section LightRAG Ingress Configuration
+  ## @param lightrag.ingress Ingress configuration for LightRAG web interface
+  ingress:
+    ## @param lightrag.ingress.enabled Enable ingress for LightRAG
+    enabled: false
+    ## @param lightrag.ingress.className Ingress class name
+    className: nginx
+    ## @param lightrag.ingress.annotations Ingress annotations
+    annotations: {}
+      # cert-manager.io/cluster-issuer: "letsencrypt"
+    ## @param lightrag.ingress.hosts Ingress hosts configuration
+    hosts:
+      - host: lightrag.local
+        paths:
+          - path: /
+            pathType: Prefix
+    ## @param lightrag.ingress.tls TLS configuration for ingress
+    tls: []
+
+  ## @section LightRAG Resources Configuration
+  ## @param lightrag.resources Resource configuration for LightRAG containers
+  resources:
+    ## @param lightrag.resources.limits Resource limits for LightRAG
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    ## @param lightrag.resources.requests Resource requests for LightRAG
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+  ## @section LightRAG Persistence Configuration
+  ## @param lightrag.persistence Persistence configuration for LightRAG data and inputs
+  persistence:
+    ## @param lightrag.persistence.enabled Enable persistent storage for LightRAG
+    enabled: true
+    ## @param lightrag.persistence.ragStorage RAG storage volume configuration
+    ragStorage:
+      ## @param lightrag.persistence.ragStorage.size Size of RAG storage volume
+      size: 10Gi
+    ## @param lightrag.persistence.inputs Input files storage volume configuration
+    inputs:
+      ## @param lightrag.persistence.inputs.size Size of inputs storage volume
+      size: 5Gi
+    ## @param lightrag.persistence.storageClassName Storage class name for persistent volumes
+    storageClassName: ""
+
+  ## @section LightRAG Environment Variables
+  ## @param lightrag.env Environment variables for LightRAG configuration
+  ## Complete configuration for LightRAG services and integrations
+  env:
+    ## @param lightrag.env.HOST Server host binding
+    HOST: 0.0.0.0
+    ## @param lightrag.env.PORT Server port
+    PORT: 9621
+    ## @param lightrag.env.WEBUI_TITLE Web UI title
+    WEBUI_TITLE: Graph RAG Engine
+    ## @param lightrag.env.WEBUI_DESCRIPTION Web UI description
+    WEBUI_DESCRIPTION: Simple and Fast Graph Based RAG System
+
+    ## LLM Configuration
+    ## @param lightrag.env.LLM_BINDING LLM binding type (ollama, openai, etc.)
+    LLM_BINDING: ollama
+    ## @param lightrag.env.LLM_MODEL LLM model name to use
+    LLM_MODEL: llama3.1
+    ## @param lightrag.env.LLM_BINDING_HOST LLM service host URL
+    LLM_BINDING_HOST: http://openprime-ai-ollama.openprime-ai.svc.cluster.local:11434
+
+    ## Embedding Configuration
+    ## @param lightrag.env.EMBEDDING_BINDING Embedding service binding
+    EMBEDDING_BINDING: ollama
+    ## @param lightrag.env.EMBEDDING_MODEL Embedding model name
+    EMBEDDING_MODEL: bge-m3:latest
+    ## @param lightrag.env.EMBEDDING_DIM Embedding dimension size
+    EMBEDDING_DIM: 1024
+    ## @param lightrag.env.EMBEDDING_BINDING_HOST Embedding service host URL
+    EMBEDDING_BINDING_HOST: http://openprime-ai-ollama.openprime-ai.svc.cluster.local:11434
+    ## @param lightrag.env.OLLAMA_EMBEDDING_NUM_CTX Ollama embedding context length
+    OLLAMA_EMBEDDING_NUM_CTX: 8192
+    ## @param lightrag.env.OLLAMA_LLM_NUM_CTX Ollama LLM context length
+    OLLAMA_LLM_NUM_CTX: 32768
+
+    ## Storage Backend Configuration
+    ## @param lightrag.env.LIGHTRAG_KV_STORAGE Key-value storage backend
+    LIGHTRAG_KV_STORAGE: RedisKVStorage
+    ## @param lightrag.env.LIGHTRAG_VECTOR_STORAGE Vector storage backend
+    LIGHTRAG_VECTOR_STORAGE: QdrantVectorDBStorage
+    ## @param lightrag.env.LIGHTRAG_GRAPH_STORAGE Graph storage backend
+    LIGHTRAG_GRAPH_STORAGE: Neo4JStorage
+    ## @param lightrag.env.LIGHTRAG_DOC_STATUS_STORAGE Document status storage backend
+    LIGHTRAG_DOC_STATUS_STORAGE: RedisDocStatusStorage
+
+    ## Neo4j Configuration
+    ## @param lightrag.env.NEO4J_URI Neo4j connection URI
+    NEO4J_URI: neo4j://openprime-ai-neo4j-admin.openprime-ai.svc.cluster.local:7687
+    ## @param lightrag.env.NEO4J_USERNAME Neo4j username
+    NEO4J_USERNAME: neo4j
+    ## @param lightrag.env.NEO4J_PASSWORD Neo4j password
+    NEO4J_PASSWORD: neo4j
+    ## @param lightrag.env.NEO4J_DATABASE Neo4j database name
+    NEO4J_DATABASE: neo4j
+    ## @param lightrag.env.NEO4J_MAX_CONNECTION_POOL_SIZE Neo4j connection pool size
+    NEO4J_MAX_CONNECTION_POOL_SIZE: 100
+    ## @param lightrag.env.NEO4J_CONNECTION_TIMEOUT Neo4j connection timeout (seconds)
+    NEO4J_CONNECTION_TIMEOUT: 30
+    ## @param lightrag.env.NEO4J_CONNECTION_ACQUISITION_TIMEOUT Neo4j connection acquisition timeout (seconds)
+    NEO4J_CONNECTION_ACQUISITION_TIMEOUT: 30
+    ## @param lightrag.env.NEO4J_MAX_TRANSACTION_RETRY_TIME Neo4j transaction retry time (seconds)
+    NEO4J_MAX_TRANSACTION_RETRY_TIME: 30
+    ## @param lightrag.env.NEO4J_MAX_CONNECTION_LIFETIME Neo4j connection lifetime (seconds)
+    NEO4J_MAX_CONNECTION_LIFETIME: 300
+    ## @param lightrag.env.NEO4J_LIVENESS_CHECK_TIMEOUT Neo4j liveness check timeout (seconds)
+    NEO4J_LIVENESS_CHECK_TIMEOUT: 30
+    ## @param lightrag.env.NEO4J_KEEP_ALIVE Neo4j keep alive setting
+    NEO4J_KEEP_ALIVE: true
+
+    ## Qdrant Configuration
+    ## @param lightrag.env.QDRANT_URL Qdrant connection URL
+    QDRANT_URL: http://openprime-ai-qdrant.openprime-ai.svc.cluster.local:6333
+
+    ## Redis Configuration
+    ## @param lightrag.env.REDIS_URI Redis connection URI
+    REDIS_URI: redis://openprime-ai-redis-ha-announce-0.openprime-ai.svc.cluster.local:6379
+    ## @param lightrag.env.REDIS_WORKSPACE Redis workspace name
+    REDIS_WORKSPACE: lightrag_workspace
+
+####################################################
+# REDIS
+####################################################
+## @section Redis HA Configuration
+## Redis HA provides high-availability Redis for LightRAG storage backend
+## For full configuration options, see: https://github.com/DandyDeveloper/charts/tree/master/charts/redis-ha
+## @param redis-ha Redis HA configuration object
+redis-ha:
+  ## @param redis-ha.enabled Enable Redis HA deployment
+  enabled: false
+  ## @param redis-ha.replicas Number of Redis replicas
+  replicas: 1
+
+  redis:
+    # -- Redis port
+    port: 6379
+    # -- Redis configuration
+    config:
+      min-replicas-to-write: 0
+      min-slaves-to-write: 0
+
+  sentinel:
+    # -- Redis Sentinel port
+    port: 26379
+
+  # -- Node selector for Redis pods
+  nodeSelector: {}
+  # -- Tolerations for Redis pods
+  tolerations: []
+
+  # -- Persistent volume configuration for Redis
+  persistentVolume:
+    enabled: true
+    # -- Storage class for Redis persistent volumes
+    storageClass: ""
+    size: 10Gi
+
+####################################################
+# NEO4J
+####################################################
+## @section Neo4j Configuration
+## Neo4j provides graph database capabilities for LightRAG
+## For full configuration options, see: https://github.com/neo4j/helm-charts
+## @param neo4j Neo4j configuration object
+neo4j:
+  ## @param neo4j.enabled Enable Neo4j deployment
+  enabled: false
+  ## @param neo4j.nameOverride Name override for Neo4j resources
+  nameOverride: "neo4j"
+
+  podSpec:
+    # -- Tolerations for Neo4j pods
+    tolerations: []
+
+  neo4j:
+    # -- Neo4j instance name
+    name: neo4j
+    # -- Neo4j edition (community, enterprise)
+    edition: community
+    # -- Neo4j admin password
+    password: "neo4j"
+    # -- Resource configuration for Neo4j
+    resources:
+      cpu: "500m"
+      memory: "2Gi"
+
+  services:
+    default:
+      annotations: {}
+    neo4j:
+      enabled: true
+      spec:
+        type: ClusterIP
+
+  # -- Volume configuration for Neo4j
+  volumes:
+    data:
+      labels: {}
+      disableSubPathExpr: false
+      # -- Volume mode for data storage
+      mode: "defaultStorageClass"
+      defaultStorageClass:
+        accessModes:
+          - ReadWriteOnce
+        requests:
+          storage: 50Gi
+    backups:
+      disableSubPathExpr: false
+      mode: "share"
+      share:
+        name: "data"
+    logs:
+      disableSubPathExpr: false
+      mode: "share"
+      share:
+        name: "data"
+    metrics:
+      disableSubPathExpr: false
+      mode: "share"
+      share:
+        name: "data"
+    import:
+      disableSubPathExpr: false
+      mode: "share"
+      share:
+        name: "data"
+    licenses:
+      disableSubPathExpr: false
+      mode: "share"
+      share:
+        name: "data"
+
+####################################################
+# QDRANT
+####################################################
+## @section Qdrant Configuration
+## Qdrant provides vector database capabilities for embeddings and similarity search
+## For full configuration options, see: https://github.com/qdrant/qdrant-helm
+## @param qdrant Qdrant configuration object
+qdrant:
+  ## @param qdrant.enabled Enable Qdrant deployment
+  enabled: false
+  ## @param qdrant.replicaCount Number of Qdrant replicas
+  replicaCount: 1
+
+  # -- Persistence configuration for Qdrant
+  persistence:
+    accessModes: ["ReadWriteOnce"]
+    size: 10Gi
+    annotations: {}
+    # -- Storage class for Qdrant persistent volumes
+    storageClassName: ""
+
+  # -- Ingress configuration for Qdrant
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    additionalLabels: {}
+    annotations: {}
+      # cert-manager.io/cluster-issuer: "letsencrypt"
+    hosts:
+      - host: qdrant.local
+        paths:
+          - path: /
+            pathType: Prefix
+            servicePort: 6333
+    tls: []
+
+  # -- Node selector for Qdrant pods
+  nodeSelector: {}
+  # -- Tolerations for Qdrant pods
+  tolerations: []
+  # -- Affinity rules for Qdrant pods
+  affinity: {}
+
+  metrics:
+    serviceMonitor:
+      # -- Enable ServiceMonitor for Prometheus
+      enabled: false
+
+  # -- Resource configuration for Qdrant
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+
+####################################################
+# MINIO
+####################################################
+## @section MinIO Tenant Configuration
+## MinIO provides S3-compatible object storage for document and data storage
+## For full configuration options, see: https://github.com/minio/operator/tree/master/helm/tenant
+## @param tenant MinIO Tenant configuration object
+tenant:
+  ## @param tenant.enabled Enable MinIO Tenant deployment
+  enabled: false
+
+  tenant:
+    # -- MinIO tenant name
+    name: minio
+    # -- Configuration secret reference
+    configuration:
+      name: minio-env-configuration
+    # -- Config secret configuration
+    configSecret:
+      name: minio-env-configuration
+      accessKey: false
+      secretKey: false
+      existingSecret: true
+    # -- MinIO users
+    users:
+      - name: minio-user
+
+    # -- Storage pools configuration
+    pools:
+      - servers: 1
+        name: pool-0
+        volumesPerServer: 1
+        size: 100Gi
+        # -- Storage class for MinIO volumes
+        storageClassName: ""
+
+    # -- Default buckets to create
+    buckets:
+      - name: documents
+      - name: qdrant-bucket
+
+    certificate:
+      # -- Request auto certificate from cert-manager
+      requestAutoCert: false
+
+  # -- Ingress configuration for MinIO
+  ingress:
+    api:
+      enabled: false
+      ingressClassName: ""
+      labels: {}
+      annotations: {}
+      tls: []
+      host: minio-api.local
+      path: /
+      pathType: Prefix
+    console:
+      enabled: false
+      ingressClassName: nginx
+      labels: {}
+      annotations: {}
+      tls: []
+      host: minio.local
+      path: /
+      pathType: Prefix
+
+####################################################
+# ADDITIONAL SECRETS
+####################################################
+## @section Additional Secrets Configuration
+## Deploy additional secrets like minio-secrets and registry-credentials
+## These secrets are used for authentication and configuration of various services
+## @param additionalSecrets Additional secrets configuration object
+additionalSecrets:
+  ## @param additionalSecrets.enabled Enable additional secrets deployment
+  enabled: false
+  secrets:
+    # -- MinIO secrets for authentication
+    minio:
+      enabled: false
+      name: minio-env-configuration
+      type: Opaque
+      data: {}
+        # config.env: <base64-encoded-config>
+        # Example config.env content:
+        # export MINIO_ROOT_USER=admin
+        # export MINIO_ROOT_PASSWORD=Kf9xOI/Ec4AIH/F+dPWThex8s2Ma8dzfHZdtX37999w=
+
+    # -- MinIO user credentials
+    minioUser:
+      enabled: false
+      name: minio-user
+      type: Opaque
+      data: {}
+        # CONSOLE_ACCESS_KEY: <base64-encoded-key>
+        # CONSOLE_SECRET_KEY: <base64-encoded-secret>
+
+    # -- Docker registry credentials
+    registryCredentials:
+      enabled: false
+      name: registry-credentials
+      type: kubernetes.io/dockerconfigjson
+      data: {}
+        # .dockerconfigjson: <base64-encoded-docker-config>

@@ -1,0 +1,41 @@
+apiVersion: v2
+name: openprime-ai
+description: A Helm chart for deploying OpenPrime AI components for production use
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+kubeVersion: ">=1.25.0-0"
+keywords:
+  - ai
+dependencies:
+  - name: open-webui
+    version: 8.6.0
+    repository: https://helm.openwebui.com
+    condition: open-webui.enabled
+  - name: ollama
+    version: 1.29.0
+    repository: https://helm.otwld.com
+    condition: ollama.enabled
+  - name: redis-ha
+    version: 4.34.13
+    repository: https://dandydeveloper.github.io/charts
+    condition: redis-ha.enabled
+  - name: qdrant
+    version: 1.15.4
+    repository: https://qdrant.github.io/qdrant-helm
+    condition: qdrant.enabled
+  - name: neo4j
+    version: 2025.8.0
+    repository: https://neo4j.github.io/helm-charts
+    condition: neo4j.enabled
+  - name: lightrag
+    version: 0.1.0
+    condition: lightrag.enabled
+  - name: tenant
+    version: 7.1.1
+    repository: https://operator.min.io
+    condition: tenant.enabled
+maintainers:
+  - url: https://devopsgroup.sk
+    name: DevOpsGroup s.r.o.
+    email: info@devopsgroup.sk

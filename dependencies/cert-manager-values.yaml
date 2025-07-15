@@ -1,0 +1,17 @@
+installCRDs: true
+replicaCount: 1
+nodeSelector:
+  {}
+  
+prometheus:
+  enabled: false
+webhook:
+  replicaCount: 1
+  nodeSelector:
+    {}
+    
+cainjector:
+  replicaCount: 1
+  nodeSelector:
+    {}
+    
