@@ -3,7 +3,26 @@
 [![Helm](https://img.shields.io/badge/Helm-0F1689?logo=helm&logoColor=fff)](#)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=fff)](#)
 
+
+## OpenPrime AI
+
+If you’re currently using cloud-based AI services like ChatGPT or Microsoft Copilot, our on-premise open-source AI solution takes things to the next level — giving you complete control over your data and the ability to tailor the AI precisely to your company’s needs.
+
+It runs directly on your own infrastructure — with no dependence on external vendors and zero monthly fees.
+
+A modern AI solution built on open-source technologies, combining locally deployed LLM models (e.g., LLaMA, Mistral) with powerful search, experimentation, and model management capabilities.
+
 A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platform featuring OpenWebUI, Ollama, LightRAG, and supporting services for production Kubernetes environments.
+
+<p align="center">
+  <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
+  <img src="devopsgroup-logo.svg" alt="DevOpsGroup" height="60">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://dnation.cloud/" title="dNation page">
+  <img src="dnation-logo.png" alt="dNation" height="60">
+  </a>
+</p>
 
 ## 🏗️ Architecture Overview
 
