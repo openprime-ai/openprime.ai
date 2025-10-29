@@ -23,7 +23,7 @@ A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platfor
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
       <source media="(prefers-color-scheme: light)" srcset="dnation-logo-wb.png">
-      <img alt="dNation" src="dnation-logo-wb.png">
+      <img alt="dNation" src="dnation-logo-wb.png" height="60">
     </picture>
   </a>
 </p>
