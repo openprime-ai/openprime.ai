@@ -14,12 +14,14 @@ A modern AI solution built on open-source technologies, combining locally deploy
 
 A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platform featuring OpenWebUI, Ollama, LightRAG, and supporting services for production Kubernetes environments.
 
+Developed as a collaboration of these companies:
+
 <p align="center">
   <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
-    <picture style="margin-right: 120px;">
+    <picture>
       <source media="(prefers-color-scheme: dark)" srcset="devopsgroup-logo-db.png">
       <source media="(prefers-color-scheme: light)" srcset="devopsgroup-logo-wb.png">
-      <img alt="dNation" src="devopsgroup-logo-wb.png" height="40">
+      <img alt="dNation" src="devopsgroup-logo-wb.png" height="35">
     </picture>
   </a>
   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -27,7 +29,7 @@ A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platfor
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
       <source media="(prefers-color-scheme: light)" srcset="dnation-logo-wb.png">
-      <img alt="dNation" src="dnation-logo-wb.png" height="90">
+      <img alt="dNation" src="dnation-logo-wb.png" height="100">
     </picture>
   </a>
 </p>
