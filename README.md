@@ -16,17 +16,18 @@ A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platfor
 
 <p align="center">
   <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
-    <picture>
+    <picture style="margin-right: 120px;">
       <source media="(prefers-color-scheme: dark)" srcset="devopsgroup-logo-db.png">
       <source media="(prefers-color-scheme: light)" srcset="devopsgroup-logo-wb.png">
-      <img alt="dNation" src="devopsgroup-logo-wb.png" height="60" style="margin-right:12px;">
+      <img alt="dNation" src="devopsgroup-logo-wb.png" height="40">
     </picture>
   </a>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
   <a href="https://dnation.cloud/" title="dNation page">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
       <source media="(prefers-color-scheme: light)" srcset="dnation-logo-wb.png">
-      <img alt="dNation" src="dnation-logo-wb.png" height="60">
+      <img alt="dNation" src="dnation-logo-wb.png" height="90">
     </picture>
   </a>
 </p>
