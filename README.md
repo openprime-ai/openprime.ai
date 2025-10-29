@@ -20,7 +20,11 @@ A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platfor
   </a>
   &nbsp;&nbsp;
   <a href="https://dnation.cloud/" title="dNation page">
-  <img src="dnation-logo.png" alt="dNation" height="60">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
+      <source media="(prefers-color-scheme: light)" srcset="dnation-logo-wb.png">
+      <img alt="dNation" src="dnation-logo-wb.png">
+    </picture>
   </a>
 </p>
 
