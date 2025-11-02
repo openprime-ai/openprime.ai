@@ -6,25 +6,33 @@
 
 ## Run AI in private/on-premise cloud
 
-If you’re currently using cloud-based AI services like ChatGPT or Microsoft Copilot, our on-premise open-source AI solution takes things to the next level — giving you complete control over your data and the ability to tailor the AI precisely to your company’s needs.
+![OpenPrime - Sovereign AI Platform](OpenPrime-AI.png)
 
-It runs directly on your own infrastructure — with no dependence on external vendors and zero monthly fees.
+If you’re currently using cloud-based AI services like ChatGPT, our on-premise open-source AI solution takes things to the next level - giving you complete control over your data and the ability to tailor the AI precisely to your company’s needs.
 
-A modern AI solution built on open-source technologies, combining locally deployed LLM models (e.g., LLaMA, Mistral) with powerful search, experimentation, and model management capabilities.
+OpenPrime is a modern AI solution built on open-source technologies, combining locally deployed LLM models (e.g., LLaMA, Mistral) with powerful search, experimentation and model management capabilities. 
 
-A comprehensive Helm chart for deploying OpenPrime AI - a complete AI/ML platform featuring OpenWebUI, Ollama, LightRAG, and supporting services for production Kubernetes environments.
+Technically it is a Helm chart for deploying complete AI/ML platform featuring Web UI, Ollama, LightRAG and supporting services for production Kubernetes environments.
 
-Developed as a collaboration of these companies:
+## OpenPrime advantages
+
+✅ Full control over your data - your data is controlled by you, not hyperscalers obliged to follow [CLOUD Act](https://en.wikipedia.org/wiki/CLOUD_Act#Support_and_opposition) law allowing 3rd parties to spy on your data even if it is stored within EU
+
+✅ No vendor lock-in - everything is truly open source, no secret sauce added
+
+✅ Reduced operational costs
+
+✅ Optional commercial support is available
+
+## Is it truly open source?
+
+Yes, OpenPrime is truly open source, developed under [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html).
+
+## Who is developing OpenPrime?
+
+OpenPrime is developed through the joint efforts of the following companies:
 
 <p align="center">
-  <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="devopsgroup-logo-db.png">
-      <source media="(prefers-color-scheme: light)" srcset="devopsgroup-logo-wb.png">
-      <img alt="dNation" src="devopsgroup-logo-wb.png" height="35">
-    </picture>
-  </a>
-  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
   <a href="https://dnation.cloud/" title="dNation page">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
@@ -32,7 +40,26 @@ Developed as a collaboration of these companies:
       <img alt="dNation" src="dnation-logo-wb.png" height="100">
     </picture>
   </a>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="devopsgroup-logo-db.png">
+      <source media="(prefers-color-scheme: light)" srcset="devopsgroup-logo-wb.png">
+      <img alt="dNation" src="devopsgroup-logo-wb.png" height="35">
+    </picture>
+  </a>
 </p>
+
+If you want to join our development efforts, drop us a line at 
+<a href="mailto:openprime.ai@dNation.cloud?subject=OpenPrime - Sovereign AI Platform">openprime.ai@dnation.cloud</a>.
+
+## Supported modes of operation
+
+OpenPrime supports following modes of operation:
+
+1. Running on your own infrastructure -  operated by your staff, no dependencies on external vendors, zero monthly fees
+2. Running on your own infrastructure and operated by one of the companies developing it - if you want to focus on your core business and let burden of day-to-day operations to company which has it as their core business
+3. Running and operated by one of the companies developing it, on their own infrastructure
 
 ## 🏗️ Architecture Overview
 
