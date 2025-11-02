@@ -6,7 +6,7 @@
 
 ## Run AI in private/on-premise cloud
 
-![OpenPrime - Sovereign AI Platform](OpenPrime-AI.png)
+![OpenPrime - Sovereign AI Platform](images/OpenPrime-AI.png)
 
 If you’re currently using cloud-based AI services like ChatGPT, our on-premise open-source AI solution takes things to the next level - giving you complete control over your data and the ability to tailor the AI precisely to your company’s needs.
 
@@ -35,17 +35,17 @@ OpenPrime is developed through the joint efforts of the following companies:
 <p align="center">
   <a href="https://dnation.cloud/" title="dNation page">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="dnation-logo-db.png">
-      <source media="(prefers-color-scheme: light)" srcset="dnation-logo-wb.png">
-      <img alt="dNation" src="dnation-logo-wb.png" height="100">
+      <source media="(prefers-color-scheme: dark)" srcset="images/dnation-logo-db.png">
+      <source media="(prefers-color-scheme: light)" srcset="images/dnation-logo-wb.png">
+      <img alt="dNation" src="images/dnation-logo-wb.png" height="100">
     </picture>
   </a>
   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
   <a href="https://devopsgroup.eu/" title="DevOpsGroup page">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="devopsgroup-logo-db.png">
-      <source media="(prefers-color-scheme: light)" srcset="devopsgroup-logo-wb.png">
-      <img alt="dNation" src="devopsgroup-logo-wb.png" height="35">
+      <source media="(prefers-color-scheme: dark)" srcset="images/devopsgroup-logo-db.png">
+      <source media="(prefers-color-scheme: light)" srcset="images/devopsgroup-logo-wb.png">
+      <img alt="dNation" src="images/devopsgroup-logo-wb.png" height="35">
     </picture>
   </a>
 </p>
@@ -63,7 +63,7 @@ OpenPrime supports following modes of operation:
 
 ## 🏗️ Architecture Overview
 
-<img src="diagram.drawio.png" align="center" />
+<img src="images/diagram.drawio.png" align="center" />
 
 <br>
 
