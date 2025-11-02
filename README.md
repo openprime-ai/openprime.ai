@@ -4,7 +4,7 @@
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=fff)](#)
 
 
-## OpenPrime AI
+## Run AI in private/on-premise cloud
 
 If you’re currently using cloud-based AI services like ChatGPT or Microsoft Copilot, our on-premise open-source AI solution takes things to the next level — giving you complete control over your data and the ability to tailor the AI precisely to your company’s needs.
 
